@@ -23,5 +23,8 @@
     "load-grunt-tasks": "^3.2.0",
     "node-xlsx": "~0.6.0",
     "xlsx": "~0.8.0"
+  },
+  "devDependencies": {
+    "grunt-xlsx-to-json": "^0.1.1"
   }
 }

@@ -167,6 +167,18 @@ module.exports = (grunt) ->
         #     }
               
         # },
+        # xlsx_to_json: {
+        #     options: {}
+        #     files: {
+        #         # expand: true,
+        #         cwd: 'src/data',
+        #         dest: 'src/data',
+        #         src: [
+        #          '**/*.xlsx'
+        #         ],
+        #         ext: '.json'
+        #     }
+        # }
         watch: {
             less: {
                 files: 'src/less/**/*.less'
@@ -237,6 +249,7 @@ module.exports = (grunt) ->
         'clean:*'                       #Clean .tmp && build folder
         'less', 'cssmin', 'usebanner'   #Build Css
         # 'excel_vocabulary'
+        # 'xlsx_to_json'
         'copy:*'
         'uglify:js'                     #Uglify JS
         'string-replace'                #HTML localhost replacement
