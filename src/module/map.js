@@ -79,7 +79,6 @@ define(function(require, exports, module) {
       legendData.push(map.mapCity[item]);
       series.push(seriesitem);
     }
-    console.log(series);
     option = {
       tooltip: {
         show: true,
