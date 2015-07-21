@@ -1,8 +1,19 @@
 <!DOCTYPE html>
 <html>
-    <head></head>
+    <head>
+        <title></title>
+        <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.css"
+    </head>
     <body>
+        <div class="container" style="margin-top:10px;">
+        <ul class="nav nav-tabs">
+          <li role="presentation" class="active"><a href="#">折线图</a></li>
+          <li role="presentation"><a href="#">柱状图</a></li>
+          <li role="presentation"><a href="#">Messages</a></li>
+        </ul>
         <div id="air_chart" style="width:100%;min-height:300px;background-color:gray"></div>
+        <div id="indicator_chart" style="width:50%;min-height:400px;background-color:gray"></div>
+        </div>
         <script data-main="js/home.js"src="vendor/requirejs/require.js"></script>
         <script src="js/index.js"></script>
     </body>
