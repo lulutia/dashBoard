@@ -4,4 +4,4 @@
  * Version: 0.0.1
  * Copyright 2015 - 2015 
  */
- define(function(require,a,b){"use strict";var c,d,e;return require("jquery"),d=require("module/map"),c=require("module/indicator"),e={},e.init=function(){return d.init(),c.init()},b.exports=e});
+ define(function(require,a,b){"use strict";var c,d;return require("jquery"),c=require("module/map"),d={},d.init=function(){return c.init()},b.exports=d});
