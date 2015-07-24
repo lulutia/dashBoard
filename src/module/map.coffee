@@ -7,6 +7,7 @@ define (require, exports, module) ->
     map.init = ->
         map.maping()
         map.getData()
+        map.eventBind()
     map.maping = ->
         @mapCity = {
             "SH": "上海"
@@ -38,6 +39,12 @@ define (require, exports, module) ->
                 console.log status
         }
 
+    map.eventBind = ->
+        $("#J-nav li").click ->
+            $(@).parent().find("li").removeClass("active")
+            $(@).addClass("active")
+            map.getData()
+
     map.initChart = (data) ->
         @airchart = gChart.init(document.getElementById('air_chart'))
         series = []
@@ -45,7 +52,7 @@ define (require, exports, module) ->
         for item in data.NAME
             seriesitem = {}
             seriesitem.name = map.mapCity[item]
-            seriesitem.type = "line"
+            seriesitem.type = $("#J-nav li.active").attr("value").toString()
             seriesitem.smooth = true
             seriesitem.data = data[item]
             seriesitem.markPoint = {
@@ -62,6 +69,10 @@ define (require, exports, module) ->
             legendData.push(map.mapCity[item])
             series.push seriesitem
         option = {
+            title: {
+                text: '北京，上海，广州三城市空气质量图'
+                subtext: '部分数据'
+               },
             tooltip: {
                 show: true
                 trigger: "axis"

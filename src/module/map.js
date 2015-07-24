@@ -6,7 +6,8 @@ define(function(require, exports, module) {
   gChart = require("echarts");
   map.init = function() {
     map.maping();
-    return map.getData();
+    map.getData();
+    return map.eventBind();
   };
   map.maping = function() {
     return this.mapCity = {
@@ -44,6 +45,13 @@ define(function(require, exports, module) {
       }
     });
   };
+  map.eventBind = function() {
+    return $("#J-nav li").click(function() {
+      $(this).parent().find("li").removeClass("active");
+      $(this).addClass("active");
+      return map.getData();
+    });
+  };
   map.initChart = function(data) {
     var i, item, legendData, len, option, ref, series, seriesitem;
     this.airchart = gChart.init(document.getElementById('air_chart'));
@@ -54,7 +62,7 @@ define(function(require, exports, module) {
       item = ref[i];
       seriesitem = {};
       seriesitem.name = map.mapCity[item];
-      seriesitem.type = "line";
+      seriesitem.type = $("#J-nav li.active").attr("value").toString();
       seriesitem.smooth = true;
       seriesitem.data = data[item];
       seriesitem.markPoint = {
@@ -80,6 +88,10 @@ define(function(require, exports, module) {
       series.push(seriesitem);
     }
     option = {
+      title: {
+        text: '北京，上海，广州三城市空气质量图',
+        subtext: '部分数据'
+      },
       tooltip: {
         show: true,
         trigger: "axis"
