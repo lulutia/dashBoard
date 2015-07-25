@@ -12,11 +12,12 @@ define (require, exports, module) ->
     all.getData = ->
         $.ajax {
             type: "get"
-            url: "http://www.pm25.in/api/querys/aqi_ranking.json?token=5j1znBVAsnSf5xQyNQyq"
-            dataType: "jsonp"
+            url: "./data/country.json"
+            dataType: "json"
             success: (data,status) ->
-                console.log data
+                all.dataHandle(data)
         }
+    
     all.eventBind = ->
         $("#J-allnav li").click ->
             $(@).parent().find("li").removeClass("active")
@@ -46,7 +47,7 @@ define (require, exports, module) ->
         }
         for dataitem, index in data[value]
             obj = {}
-            obj.name = data["position_name"][index]
+            obj.name = data["area"][index]
             obj.value = dataitem
             item.data.push obj
         series.push item

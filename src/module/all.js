@@ -11,10 +11,10 @@ define(function(require, exports, module) {
   all.getData = function() {
     return $.ajax({
       type: "get",
-      url: "http://www.pm25.in/api/querys/aqi_ranking.json?token=5j1znBVAsnSf5xQyNQyq",
-      dataType: "jsonp",
+      url: "./data/country.json",
+      dataType: "json",
       success: function(data, status) {
-        return console.log(data);
+        return all.dataHandle(data);
       }
     });
   };
@@ -64,7 +64,7 @@ define(function(require, exports, module) {
     for (index = i = 0, len = ref.length; i < len; index = ++i) {
       dataitem = ref[index];
       obj = {};
-      obj.name = data["position_name"][index];
+      obj.name = data["area"][index];
       obj.value = dataitem;
       item.data.push(obj);
     }
