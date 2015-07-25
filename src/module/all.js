@@ -5,16 +5,23 @@ define(function(require, exports, module) {
   all = {};
   gChart = require("echarts");
   all.init = function() {
-    return all.getData();
+    all.getData();
+    return all.eventBind();
   };
   all.getData = function() {
     return $.ajax({
       type: "get",
-      url: "./data/country.json",
-      dataType: "json",
+      url: "http://www.pm25.in/api/querys/aqi_ranking.json?token=5j1znBVAsnSf5xQyNQyq",
+      dataType: "jsonp",
       success: function(data, status) {
-        return all.dataHandle(data);
+        return console.log(data);
       }
+    });
+  };
+  all.eventBind = function() {
+    return $("#J-allnav li").click(function() {
+      $(this).parent().find("li").removeClass("active");
+      return $(this).addClass("active");
     });
   };
   all.dataHandle = function(data) {

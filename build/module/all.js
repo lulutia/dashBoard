@@ -1,0 +1,7 @@
+
+/**
+ * lulutia
+ * Version: 0.0.1
+ * Copyright 2015 - 2015 
+ */
+ define(function(require,a,b){"use strict";var c,d;return c={},d=require("echarts"),c.init=function(){return c.getData(),c.eventBind()},c.getData=function(){return $.ajax({type:"get",url:"http://www.pm25.in/api/querys/aqi_ranking.json?token=5j1znBVAsnSf5xQyNQyq",dataType:"jsonp",success:function(a,b){return console.log(a)}})},c.eventBind=function(){return $("#J-allnav li").click(function(){return $(this).parent().find("li").removeClass("active"),$(this).addClass("active")})},c.dataHandle=function(a){var b,d,e,f,g,h,i;for(c.allType={},b=0,h=a.length;h>b;b++)for(d=a[b],g=Object.keys(d),e=0,i=g.length;i>e;e++)f=g[e],c.allType[f]=c.allType[f]||[],c.allType[f].push(d[f]);return c.dataProcess(c.allType)},c.dataProcess=function(a){var b,d,e,f,g,h,i,j,k;for(k=$("#J-allnav li.active").attr("value").toString(),j=[],f={name:k,type:"map",mapType:"china",itemStyle:{normal:{label:{show:!0}},emphasis:{label:{show:!0}}},data:[]},i=a[k],e=d=0,g=i.length;g>d;e=++d)b=i[e],h={},h.name=a.position_name[e],h.value=b,f.data.push(h);return j.push(f),c.initChart(j)},c.initChart=function(a){var b;return console.log(a),this.airchart=d.init(document.getElementById("airall_chart")),b={title:{text:"全国气候状况",subtext:"数据取自"},tooltip:{trigger:"item"},series:a},this.airchart.setOption(b)},b.exports=c});

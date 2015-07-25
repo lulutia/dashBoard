@@ -7,16 +7,21 @@ define (require, exports, module) ->
 
     all.init = ->
         all.getData()
+        all.eventBind()
 
     all.getData = ->
         $.ajax {
             type: "get"
-            url: "./data/country.json"
-            dataType: "json"
+            url: "http://www.pm25.in/api/querys/aqi_ranking.json?token=5j1znBVAsnSf5xQyNQyq"
+            dataType: "jsonp"
             success: (data,status) ->
-                all.dataHandle(data)
+                console.log data
         }
-       
+    all.eventBind = ->
+        $("#J-allnav li").click ->
+            $(@).parent().find("li").removeClass("active")
+            $(@).addClass("active")
+
     all.dataHandle = (data) ->
         all.allType = {}
         for item in data
