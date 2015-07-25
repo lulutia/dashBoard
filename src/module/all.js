@@ -39,26 +39,36 @@ define(function(require, exports, module) {
     return all.dataProcess(all.allType);
   };
   all.dataProcess = function(data) {
-    var dataitem, i, index, item, len, obj, ref, series, value;
+    var dataitem, i, index, item, itemput, j, len, len1, obj, querycheck, ref, ref1, series, value;
     value = $("#J-allnav li.active").attr("value").toString();
     series = [];
-    item = {
+    itemput = {
       name: value,
       type: 'map',
       mapType: 'china',
-      itemStyle: {
-        normal: {
-          label: {
-            show: true
+      hoverable: false,
+      roam: true,
+      data: [],
+      markPoint: {
+        symbolSize: 5,
+        itemStyle: {
+          normal: {
+            borderColor: '#87cefa',
+            borderWidth: 1,
+            label: {
+              show: false
+            }
+          },
+          emphasis: {
+            borderColor: '#1e90ff',
+            borderWidth: 5,
+            label: {
+              show: false
+            }
           }
         },
-        emphasis: {
-          label: {
-            show: true
-          }
-        }
-      },
-      data: []
+        data: []
+      }
     };
     ref = data[value];
     for (index = i = 0, len = ref.length; i < len; index = ++i) {
@@ -66,19 +76,67 @@ define(function(require, exports, module) {
       obj = {};
       obj.name = data["area"][index];
       obj.value = dataitem;
-      item.data.push(obj);
+      if (obj.value > all.max) {
+        all.max = obj.value;
+      }
+      itemput.markPoint.data.push(obj);
     }
-    series.push(item);
-    return all.initChart(series);
+    ref1 = data["area"];
+    for (j = 0, len1 = ref1.length; j < len1; j++) {
+      item = ref1[j];
+      all.ajaxt(item);
+      all.flag = data["area"].length;
+    }
+    querycheck = setInterval((function(_this) {
+      return function() {
+        if (all.flag !== 0) {
+          return;
+        }
+        itemput.geoCoord = all.geocoord;
+        series.push(itemput);
+        all.initChart(series);
+        return clearInterval(querycheck);
+      };
+    })(this), 100);
+  };
+  all.geocoord = {};
+  all.max = 0;
+  all.ajaxt = function(item) {
+    return $.ajax({
+      type: "get",
+      url: "http://api.map.baidu.com/geocoder/v2/",
+      dataType: "jsonp",
+      data: {
+        output: "json",
+        ak: "ZXhtdkazbuOxPmG6xB0609zB",
+        address: item
+      },
+      success: function(data, status) {
+        if (data.status === 0) {
+          all.geocoord[item] = [];
+          all.geocoord[item].push(data.result.location.lng);
+          all.geocoord[item].push(data.result.location.lat);
+        } else {
+          all.geocoord[item].push(0);
+          all.geocoord[item].push(0);
+        }
+        return all.flag--;
+      }
+    });
   };
   all.initChart = function(data) {
     var option;
-    console.log(data);
     this.airchart = gChart.init(document.getElementById('airall_chart'));
     option = {
       title: {
         text: '全国气候状况',
         subtext: '数据取自'
+      },
+      dataRange: {
+        min: 0,
+        max: all.max,
+        calculable: true,
+        color: ['maroon', 'purple', 'red', 'orange', 'yellow', 'lightgreen']
       },
       tooltip: {
         trigger: 'item'
