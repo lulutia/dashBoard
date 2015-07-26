@@ -47,6 +47,7 @@ define (require, exports, module) ->
 
     map.initChart = (data) ->
         @airchart = gChart.init(document.getElementById('air_chart'))
+        @airpie = gChart.init(document.getElementById('airpie_chart'))
         series = []
         legendData = []
         for item in data.NAME
@@ -102,6 +103,60 @@ define (require, exports, module) ->
             series : series
         }
         @airchart.setOption(option)
+
+        option1 = {
+            title : {
+                text: 'AQI数据分析图',
+                subtext: '数据来自PM25.in',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:['AQI<100','100<AQI<200','AQI>200']
+            },
+            series : [
+                {
+                    name:'访问来源',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['15%', '60%'],
+                    data:[
+                        {value:335, name:'AQI<100'},
+                        {value:310, name:'100<AQI<200'},
+                        {value:234, name:'AQI>200'}
+                    ]
+                },
+                {
+                    name:'访问来源1',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:[
+                        {value:335, name:'AQI<100'},
+                        {value:310, name:'100<AQI<200'},
+                        {value:234, name:'AQI>200'}
+                    ]
+                },
+                {
+                    name:'访问来源2',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['85%', '60%'],
+                    data:[
+                        {value:335, name:'AQI<100'},
+                        {value:310, name:'100<AQI<200'},
+                        {value:234, name:'AQI>200'}
+                    ]
+                }
+            ]
+        }
+        @airpie.setOption(option1)
+                            
    
 
     module.exports = map

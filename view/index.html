@@ -7,13 +7,13 @@
         <div class="container" style="margin-top:30px;">
         <div class="row">
             <ul class="nav nav-tabs" id="J-allnav">
-                <li role="presentation" class="active" value="aqi"><a href="#">空气质量(AQI)</a></li>
-                <li role="presentation" value="pm2_5"><a href="#">细颗粒物(PM2.5)</a></li>
-                <li role="presentation" value="pm10"><a href="#">可吸入颗粒物(PM10)</a></li>
-                <li role="presentation" value="co"><a href="#">一氧化碳(CO)</a></li>
-                <li role="presentation" value="no2"><a href="#">二氧化氮(NO2)</a></li>
-                <li role="presentation" value="o3"><a href="#">臭氧(O3)</a></li>
-                <li role="presentation" value="so2"><a href="#">二氧化硫(SO2)</a></li>
+                <li role="presentation" class="active" value="aqi"><a>空气质量(AQI)</a></li>
+                <li role="presentation" value="pm2_5"><a>细颗粒物(PM2.5)</a></li>
+                <li role="presentation" value="pm10"><a>可吸入颗粒物(PM10)</a></li>
+                <li role="presentation" value="co"><a>一氧化碳(CO)</a></li>
+                <li role="presentation" value="no2"><a>二氧化氮(NO2)</a></li>
+                <li role="presentation" value="o3"><a>臭氧(O3)</a></li>
+                <li role="presentation" value="so2"><a>二氧化硫(SO2)</a></li>
             </ul>
             <div id="airall_chart" class="col-sm-8"style="min-height:350px;background-color:gray;"></div>
             <div id="airall_info" class="col-sm-4"style="min-height:350px;background-color:transparent;">
@@ -64,10 +64,17 @@
             </div>
             <div class="row">
             <ul class="nav nav-tabs" id="J-nav" style="margin-top:50px;">
-                <li role="presentation" class="active" value="line"><a href="#">折线图</a></li>
-                <li role="presentation" value="bar"><a href="#">柱状图</a></li>
+                <li role="presentation" class="active" value="line"><a >折线图</a></li>
+                <li role="presentation" value="bar"><a >柱状图</a></li>
             </ul>
             <div id="air_chart" style="width:100%;min-height:300px;background-color:gray"></div>
+            </div>
+            <div class="row">
+            <ul class="nav nav-tabs" id="J-circlenav" style="margin-top:50px;">
+                <li role="presentation" class="active" value="pie"><a >环形图</a></li>
+                <li role="presentation" value="pie"><a >饼状图</a></li>
+            </ul>
+            <div id="airpie_chart" style="width:100%;min-height:300px;background-color:gray"></div>
             </div>
         </div>
         <script data-main="js/home.js"src="vendor/requirejs/require.js"></script>
