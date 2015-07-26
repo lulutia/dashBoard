@@ -46,21 +46,74 @@ define(function(require, exports, module) {
     });
   };
   map.eventBind = function() {
-    return $("#J-nav li").click(function() {
+    $("#J-nav li").click(function() {
+      $(this).parent().find("li").removeClass("active");
+      $(this).addClass("active");
+      return map.getData();
+    });
+    return $("#J-circlenav li").click(function() {
       $(this).parent().find("li").removeClass("active");
       $(this).addClass("active");
       return map.getData();
     });
   };
   map.initChart = function(data) {
-    var i, item, legendData, len, option, option1, ref, series, seriesitem;
+    var BJ, GZ, SH, bjitem, gzitem, i, item, j, k, l, labelBottom, labelFromatter, labelTop, legendData, len, len1, len2, len3, option, option1, option2, radius, ref, ref1, ref2, ref3, series, seriesitem, shitem;
+    BJ = {
+      min: 0,
+      ave: 0,
+      max: 0
+    };
+    GZ = {
+      min: 0,
+      ave: 0,
+      max: 0
+    };
+    SH = {
+      min: 0,
+      ave: 0,
+      max: 0
+    };
+    ref = data.BJ;
+    for (i = 0, len = ref.length; i < len; i++) {
+      bjitem = ref[i];
+      if (bjitem < 100) {
+        BJ.min++;
+      } else if (bjitem > 100 && bjitem < 200) {
+        BJ.ave++;
+      } else {
+        BJ.max++;
+      }
+    }
+    ref1 = data.GZ;
+    for (j = 0, len1 = ref1.length; j < len1; j++) {
+      gzitem = ref1[j];
+      if (gzitem < 100) {
+        GZ.min++;
+      } else if (gzitem > 100 && gzitem < 200) {
+        GZ.ave++;
+      } else {
+        GZ.max++;
+      }
+    }
+    ref2 = data.SH;
+    for (k = 0, len2 = ref2.length; k < len2; k++) {
+      shitem = ref2[k];
+      if (shitem < 100) {
+        SH.min++;
+      } else if (shitem > 100 && shitem < 200) {
+        SH.ave++;
+      } else {
+        SH.max++;
+      }
+    }
     this.airchart = gChart.init(document.getElementById('air_chart'));
     this.airpie = gChart.init(document.getElementById('airpie_chart'));
     series = [];
     legendData = [];
-    ref = data.NAME;
-    for (i = 0, len = ref.length; i < len; i++) {
-      item = ref[i];
+    ref3 = data.NAME;
+    for (l = 0, len3 = ref3.length; l < len3; l++) {
+      item = ref3[l];
       seriesitem = {};
       seriesitem.name = map.mapCity[item];
       seriesitem.type = $("#J-nav li.active").attr("value").toString();
@@ -138,60 +191,171 @@ define(function(require, exports, module) {
       },
       series: [
         {
-          name: '访问来源',
+          name: '北京空气质量占比',
           type: 'pie',
           radius: '55%',
-          center: ['15%', '60%'],
+          center: ['17%', '60%'],
           data: [
             {
-              value: 335,
+              value: BJ.min,
               name: 'AQI<100'
             }, {
-              value: 310,
+              value: BJ.ave,
               name: '100<AQI<200'
             }, {
-              value: 234,
+              value: BJ.max,
               name: 'AQI>200'
             }
           ]
         }, {
-          name: '访问来源1',
+          name: '上海空气质量占比',
           type: 'pie',
           radius: '55%',
           center: ['50%', '60%'],
           data: [
             {
-              value: 335,
+              value: SH.min,
               name: 'AQI<100'
             }, {
-              value: 310,
+              value: SH.ave,
               name: '100<AQI<200'
             }, {
-              value: 234,
+              value: SH.max,
               name: 'AQI>200'
             }
           ]
         }, {
-          name: '访问来源2',
+          name: '广州空气质量占比',
           type: 'pie',
           radius: '55%',
           center: ['85%', '60%'],
           data: [
             {
-              value: 335,
+              value: GZ.min,
               name: 'AQI<100'
             }, {
-              value: 310,
+              value: GZ.ave,
               name: '100<AQI<200'
             }, {
-              value: 234,
+              value: GZ.max,
               name: 'AQI>200'
             }
           ]
         }
       ]
     };
-    return this.airpie.setOption(option1);
+    labelTop = {
+      normal: {
+        label: {
+          show: true,
+          position: 'center',
+          formatter: '{b}',
+          textStyle: {
+            baseline: 'bottom'
+          }
+        },
+        labelLine: {
+          show: false
+        }
+      }
+    };
+    labelFromatter = {
+      normal: {
+        label: {
+          formatter: function(params) {
+            return ((1 - params.value) * 100).toFixed(2) + '%';
+          },
+          textStyle: {
+            baseline: 'top'
+          }
+        }
+      }
+    };
+    labelBottom = {
+      normal: {
+        color: '#ccc',
+        label: {
+          show: true,
+          position: 'center'
+        },
+        labelLine: {
+          show: false
+        }
+      },
+      emphasis: {
+        color: 'rgba(0,0,0,0)'
+      }
+    };
+    radius = [50, 75];
+    option2 = {
+      title: {
+        text: 'AQI数据分析图',
+        subtext: '数据来自PM25.in',
+        x: 'center'
+      },
+      series: [
+        {
+          name: '北京空气质量占比',
+          type: 'pie',
+          center: ['15%', '60%'],
+          radius: radius,
+          x: '0%',
+          itemStyle: labelFromatter,
+          data: [
+            {
+              name: 'other',
+              value: (BJ.min + BJ.ave) / data.BJ.length,
+              itemStyle: labelBottom
+            }, {
+              name: '北京: AQI>200',
+              value: BJ.max / data.BJ.length,
+              itemStyle: labelTop
+            }
+          ]
+        }, {
+          name: '上海空气质量占比',
+          type: 'pie',
+          center: ['50%', '60%'],
+          radius: radius,
+          x: '20%',
+          itemStyle: labelFromatter,
+          data: [
+            {
+              name: 'other',
+              value: (SH.min + SH.ave) / data.SH.length,
+              itemStyle: labelBottom
+            }, {
+              name: '上海: AQI>200',
+              value: SH.max / data.SH.length,
+              itemStyle: labelTop
+            }
+          ]
+        }, {
+          name: '广州空气质量占比',
+          type: 'pie',
+          center: ['85%', '60%'],
+          radius: radius,
+          x: '40%',
+          itemStyle: labelFromatter,
+          data: [
+            {
+              name: 'other',
+              value: (GZ.min + GZ.ave) / data.GZ.length,
+              itemStyle: labelBottom
+            }, {
+              name: '广州: AQI>200',
+              value: GZ.max / data.GZ.length,
+              itemStyle: labelTop
+            }
+          ]
+        }
+      ]
+    };
+    if ($("#J-circlenav li.active").attr("value") === "circle") {
+      return this.airpie.setOption(option2);
+    } else {
+      return this.airpie.setOption(option1);
+    }
   };
   return module.exports = map;
 });

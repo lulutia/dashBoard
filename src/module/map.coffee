@@ -44,8 +44,47 @@ define (require, exports, module) ->
             $(@).parent().find("li").removeClass("active")
             $(@).addClass("active")
             map.getData()
+        $("#J-circlenav li").click ->
+            $(@).parent().find("li").removeClass("active")
+            $(@).addClass("active")
+            map.getData()
+
 
     map.initChart = (data) ->
+        BJ = {
+            min: 0
+            ave: 0
+            max: 0
+        }
+        GZ = {
+            min: 0
+            ave: 0
+            max: 0
+        }
+        SH = {
+            min: 0
+            ave: 0
+            max: 0
+        }
+        for bjitem in data.BJ
+            if bjitem < 100
+                BJ.min++
+            else if bjitem > 100 and bjitem < 200
+                BJ.ave++
+            else BJ.max++
+        for gzitem in data.GZ
+            if gzitem < 100
+                GZ.min++
+            else if gzitem > 100 and gzitem < 200
+                GZ.ave++
+            else GZ.max++
+        for shitem in data.SH
+            if shitem < 100
+                SH.min++
+            else if shitem > 100 and shitem < 200
+                SH.ave++
+            else SH.max++
+
         @airchart = gChart.init(document.getElementById('air_chart'))
         @airpie = gChart.init(document.getElementById('airpie_chart'))
         series = []
@@ -121,41 +160,131 @@ define (require, exports, module) ->
             },
             series : [
                 {
-                    name:'访问来源',
+                    name:'北京空气质量占比',
                     type:'pie',
                     radius : '55%',
-                    center: ['15%', '60%'],
+                    center: ['17%', '60%'],
                     data:[
-                        {value:335, name:'AQI<100'},
-                        {value:310, name:'100<AQI<200'},
-                        {value:234, name:'AQI>200'}
+                        {value:BJ.min, name:'AQI<100'},
+                        {value:BJ.ave, name:'100<AQI<200'},
+                        {value:BJ.max, name:'AQI>200'}
                     ]
                 },
                 {
-                    name:'访问来源1',
+                    name:'上海空气质量占比',
                     type:'pie',
                     radius : '55%',
                     center: ['50%', '60%'],
                     data:[
-                        {value:335, name:'AQI<100'},
-                        {value:310, name:'100<AQI<200'},
-                        {value:234, name:'AQI>200'}
+                        {value:SH.min, name:'AQI<100'},
+                        {value:SH.ave, name:'100<AQI<200'},
+                        {value:SH.max, name:'AQI>200'}
                     ]
                 },
                 {
-                    name:'访问来源2',
+                    name:'广州空气质量占比',
                     type:'pie',
                     radius : '55%',
                     center: ['85%', '60%'],
                     data:[
-                        {value:335, name:'AQI<100'},
-                        {value:310, name:'100<AQI<200'},
-                        {value:234, name:'AQI>200'}
+                        {value:GZ.min, name:'AQI<100'},
+                        {value:GZ.ave, name:'100<AQI<200'},
+                        {value:GZ.max, name:'AQI>200'}
                     ]
                 }
             ]
         }
-        @airpie.setOption(option1)
+
+        labelTop = {
+            normal : {
+                label : {
+                    show : true,
+                    position : 'center',
+                    formatter : '{b}',
+                    textStyle: {
+                        baseline : 'bottom'
+                    }
+                },
+                labelLine : {
+                    show : false
+                }
+            }
+        }
+        labelFromatter = {
+            normal : {
+                label : {
+                    formatter: (params) ->
+                        return ((1 - params.value) * 100).toFixed(2) + '%'
+                    textStyle: {
+                        baseline : 'top'
+                    }
+                }
+            },
+        }
+        labelBottom = {
+            normal : {
+                color: '#ccc',
+                label : {
+                    show : true,
+                    position : 'center'
+                },
+                labelLine : {
+                    show : false
+                }
+            },
+            emphasis: {
+                color: 'rgba(0,0,0,0)'
+            }
+        }
+        radius = [50, 75]
+        option2 = {
+            title : {
+                text: 'AQI数据分析图',
+                subtext: '数据来自PM25.in',
+                x:'center'
+                    },
+            series : [
+                {
+                    name:'北京空气质量占比',
+                    type : 'pie',
+                    center : ['15%', '60%'],
+                    radius : radius,
+                    x: '0%',
+                    itemStyle : labelFromatter,
+                    data : [
+                        {name:'other', value:(BJ.min + BJ.ave) / data.BJ.length, itemStyle : labelBottom},
+                        {name:'北京: AQI>200', value:BJ.max / data.BJ.length,itemStyle : labelTop}                    ]
+                },
+                {
+                    name:'上海空气质量占比',
+                    type : 'pie',
+                    center : ['50%', '60%'],
+                    radius : radius,
+                    x:'20%',
+                    itemStyle : labelFromatter,
+                    data : [
+                        {name:'other', value:(SH.min + SH.ave) / data.SH.length, itemStyle : labelBottom},
+                        {name:'上海: AQI>200', value:SH.max / data.SH.length,itemStyle : labelTop}
+                    ]
+                },
+                {
+                    name:'广州空气质量占比',
+                    type : 'pie',
+                    center : ['85%', '60%'],
+                    radius : radius,
+                    x:'40%',
+                    itemStyle : labelFromatter,
+                    data : [
+                        {name:'other', value:(GZ.min + GZ.ave) / data.GZ.length, itemStyle : labelBottom},
+                        {name:'广州: AQI>200', value:GZ.max / data.GZ.length,itemStyle : labelTop}
+                    ]
+                }
+            ]
+        }
+        if $("#J-circlenav li.active").attr("value") is "circle"
+            @airpie.setOption(option2)
+        else @airpie.setOption(option1)
+                            
                             
    
 
