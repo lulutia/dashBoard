@@ -1,5 +1,5 @@
 require.config {
-    baseUrl: "http://localhost:9009"
+    baseUrl: "./"
     paths: {
         jquery: "vendor/jquery/dist/jquery"
         echarts: "vendor/echarts/build/dist/echarts-all"
