@@ -22,6 +22,10 @@ define (require, exports, module) ->
         $("#J-allnav li").click ->
             $(@).parent().find("li").removeClass("active")
             $(@).addClass("active")
+            $(".J-info").addClass("hidden")
+            value = $("#J-allnav li.active").attr("value")
+            $("#" + value).removeClass("hidden").addClass("block")
+            all.dataProcess(all.allType)
 
     all.dataHandle = (data) ->
         all.allType = {}
@@ -63,6 +67,7 @@ define (require, exports, module) ->
             data: []
             }
         }
+        all.max = 0
         for dataitem, index in data[value]
             obj = {}
             obj.name = data["area"][index]
@@ -70,21 +75,27 @@ define (require, exports, module) ->
             if obj.value > all.max
                 all.max = obj.value
             itemput.markPoint.data.push obj
-        for item in data["area"]
-            all.ajaxt(item)
-            all.flag = data["area"].length
+  
+        if not all.geocoord?
+            all.geocoord = {}
+            for item in data["area"]
+                all.ajaxt(item)
+                all.flag = data["area"].length
 
-        querycheck = setInterval =>
-            return if all.flag isnt 0
+            querycheck = setInterval =>
+                return if all.flag isnt 0
+                itemput.geoCoord = all.geocoord
+                series.push itemput
+                all.initChart(series)
+                clearInterval(querycheck)
+            , 100
+            return
+        else
             itemput.geoCoord = all.geocoord
             series.push itemput
             all.initChart(series)
-            clearInterval(querycheck)
-        , 100
-        return
 
-    all.geocoord = {}
-    all.max = 0
+
     all.ajaxt = (item) ->
         $.ajax {
             type: "get"
@@ -110,8 +121,8 @@ define (require, exports, module) ->
         @airchart = gChart.init(document.getElementById('airall_chart'))
         option = {
             title : {
-                text: '全国气候状况',
-                subtext: '数据取自',
+                text: '全国空气质量(' + $("#J-allnav li.active").find("a").html() + ")",
+                subtext: '数据取自PM25.in',
             },
             dataRange: {
                 min : 0,

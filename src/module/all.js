@@ -20,8 +20,13 @@ define(function(require, exports, module) {
   };
   all.eventBind = function() {
     return $("#J-allnav li").click(function() {
+      var value;
       $(this).parent().find("li").removeClass("active");
-      return $(this).addClass("active");
+      $(this).addClass("active");
+      $(".J-info").addClass("hidden");
+      value = $("#J-allnav li.active").attr("value");
+      $("#" + value).removeClass("hidden").addClass("block");
+      return all.dataProcess(all.allType);
     });
   };
   all.dataHandle = function(data) {
@@ -70,6 +75,7 @@ define(function(require, exports, module) {
         data: []
       }
     };
+    all.max = 0;
     ref = data[value];
     for (index = i = 0, len = ref.length; i < len; index = ++i) {
       dataitem = ref[index];
@@ -81,26 +87,31 @@ define(function(require, exports, module) {
       }
       itemput.markPoint.data.push(obj);
     }
-    ref1 = data["area"];
-    for (j = 0, len1 = ref1.length; j < len1; j++) {
-      item = ref1[j];
-      all.ajaxt(item);
-      all.flag = data["area"].length;
+    if (all.geocoord == null) {
+      all.geocoord = {};
+      ref1 = data["area"];
+      for (j = 0, len1 = ref1.length; j < len1; j++) {
+        item = ref1[j];
+        all.ajaxt(item);
+        all.flag = data["area"].length;
+      }
+      querycheck = setInterval((function(_this) {
+        return function() {
+          if (all.flag !== 0) {
+            return;
+          }
+          itemput.geoCoord = all.geocoord;
+          series.push(itemput);
+          all.initChart(series);
+          return clearInterval(querycheck);
+        };
+      })(this), 100);
+    } else {
+      itemput.geoCoord = all.geocoord;
+      series.push(itemput);
+      return all.initChart(series);
     }
-    querycheck = setInterval((function(_this) {
-      return function() {
-        if (all.flag !== 0) {
-          return;
-        }
-        itemput.geoCoord = all.geocoord;
-        series.push(itemput);
-        all.initChart(series);
-        return clearInterval(querycheck);
-      };
-    })(this), 100);
   };
-  all.geocoord = {};
-  all.max = 0;
   all.ajaxt = function(item) {
     return $.ajax({
       type: "get",
@@ -129,8 +140,8 @@ define(function(require, exports, module) {
     this.airchart = gChart.init(document.getElementById('airall_chart'));
     option = {
       title: {
-        text: '全国气候状况',
-        subtext: '数据取自'
+        text: '全国空气质量(' + $("#J-allnav li.active").find("a").html() + ")",
+        subtext: '数据取自PM25.in'
       },
       dataRange: {
         min: 0,
