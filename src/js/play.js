@@ -2,7 +2,6 @@
 define(function(require, exports, module) {
   "use strict";
   var all, map, play;
-  require("jquery");
   map = require("module/map");
   all = require("module/all");
   play = {};

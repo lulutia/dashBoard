@@ -11,4 +11,5 @@ require.config {
         }
     }
 }
-
+require ['jquery', './play'], (jquery, play) ->
+    play.init()

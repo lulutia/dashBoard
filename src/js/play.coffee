@@ -1,7 +1,7 @@
 define (require, exports, module) ->
     "use strict"
 
-    require("jquery")
+    # require("jquery")
     map = require("module/map")
     all = require("module/all")
 
