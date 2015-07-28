@@ -13,6 +13,6 @@ require.config({
   }
 });
 
-require(['jquery', './play'], function(jquery, play) {
+require(['jquery', './js/play'], function(jquery, play) {
   return play.init();
 });
